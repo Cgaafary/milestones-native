@@ -1,7 +1,10 @@
 import React from 'react';
+import { graphql } from 'react-apollo';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
-export default class App extends React.Component {
+import getStudents from '../../data/queries/getStudents';
+
+class App extends React.Component {
 constructor(props) {
     super(props);
     this.state = { email: '', password: '' }
@@ -10,6 +13,7 @@ constructor(props) {
   _handleButtonPress = () => {
     this.props.changeAuthenticatedTo(true);
     console.log(this.state)
+    console.log(this.props.data.allUsers);
   };
 
   render() {
@@ -97,3 +101,5 @@ const styles = StyleSheet.create({
   }
   
 });
+
+export default graphql(getStudents)(App);

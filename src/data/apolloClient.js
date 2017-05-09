@@ -1,4 +1,5 @@
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
+import { AsyncStorage } from 'react-native'
 
 const networkInterface = createNetworkInterface({
   uri: 'https://api.graph.cool/simple/v1/cj24ze0w113d501157e5omwhu'
@@ -10,7 +11,7 @@ networkInterface.use([{
       req.options.headers = {};
     }
 
-    const token = localStorage.getItem('token');
+    const token = AsyncStorage.getItem('token');
     req.options.headers.authorization = token ? `Bearer ${token}` : null;
     next();
   }

@@ -8,7 +8,6 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.changeAuthenticatedTo = this.changeAuthenticatedTo.bind(this);
-        this.handleClicked = this.handleClicked.bind(this);
 
         this.state = { authenticated: false }
     }
@@ -18,17 +17,13 @@ class Main extends Component {
         return;
     }
 
-    handleClicked = () => {
-        console.log("clicked")
-    }
     
 
     render() {
         if (!this.state.authenticated) {
             return (
                 <Public
-                    changeAuthenticatedTo={this.changeAuthenticatedTo} 
-                    handleClicked={this.handleClicked}/>)
+                    changeAuthenticatedTo={this.changeAuthenticatedTo}/>)
         } else {
         return(
            <Header>

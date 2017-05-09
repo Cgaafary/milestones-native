@@ -32,7 +32,7 @@ class Main extends Component {
         } else {
         return(
            <Header>
-                <Button title="Protected" onPress={() => this.setState({authenticated: false})}/>
+                <Button title="Sign Out" onPress={() => this.setState({authenticated: false})}/>
             </Header>
         )
         }

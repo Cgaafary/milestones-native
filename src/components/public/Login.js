@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
 export default class App extends React.Component {
 constructor(props) {
@@ -9,10 +9,7 @@ constructor(props) {
 
   _handleButtonPress = () => {
     this.props.changeAuthenticatedTo(true);
-    Alert.alert(
-      'Button pressed!',
-      'You did it!',
-    );
+    console.log(this.state)
   };
 
   render() {

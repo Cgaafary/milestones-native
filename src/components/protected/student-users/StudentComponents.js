@@ -1,15 +1,17 @@
 import React from 'react';
 import { StyleSheet, View, Button, Text } from 'react-native';
-import Header from '../Header';
-import Login from './Login';
 
-export default Public = (props) => {
+export default StudentComponents = (props) => {
+    const { fullName } = props.currentUser;
     return(
         <View style={styles.container}>
             <Header>
-                <Text style={styles.headerTitle}>Public</Text>
+                <Text style={styles.headerTitle}>{fullName}</Text>
             </Header>
-            <Login _handleSignin={props._handleSignin}/>
+            <View>
+            <Text>Sorry {props.fullName}! Student pages are not yet functional...</Text>
+            <Button title="Sign Out" onPress={props._handleSignout}/>
+            </View>
         </View>
     );
 }

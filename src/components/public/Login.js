@@ -1,19 +1,33 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, AsyncStorage } from 'react-native';
 
-import getStudents from '../../data/queries/getStudents';
+import signinUser from '../../data/mutations/signinUser';
+import getCurrentUser from '../../data/queries/getCurrentUser';
 
 class App extends React.Component {
 constructor(props) {
     super(props);
-    this.state = { email: '', password: '' }
+    this.state = { email: 'cgaafary@gmail.com', password: '12345' }
   }
 
   _handleButtonPress = () => {
-    this.props.changeAuthenticatedTo(true);
-    console.log(this.state)
-    console.log(this.props.data.allUsers);
+    const { email, password } = this.state;
+        this.props.mutate({
+            refetchQueries: [{
+                query: getCurrentUser
+            }],
+            variables: {
+                email, password
+            }
+        }).then(({ data }) => {
+            const userAuthData = data.signinUser;
+            this.props._handleSignin(userAuthData);
+            console.log(userAuthData);
+
+        }).catch((error) => {
+            console.log('There was an error: ', error);
+        });
   };
 
   render() {
@@ -102,4 +116,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default graphql(getStudents)(App);
+export default graphql(signinUser)(App);

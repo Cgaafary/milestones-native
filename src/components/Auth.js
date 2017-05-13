@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button, AsyncStorage } from 'react-native';
-import { Route } from 'react-router-native';
+import { StackNavigator } from 'react-navigation';
 import Header from './Header';
 import Login from './public/Login';
 import Public from './public/Public';
@@ -14,6 +14,10 @@ class Main extends Component {
         this._handleSignout = this._handleSignout.bind(this);
 
         this.state = { authenticated: false, currentUser: {} }
+    }
+
+    static navigationOptions = {
+        title: 'Home',
     }
 
     changeAuthenticatedTo(bool) {
@@ -35,16 +39,18 @@ class Main extends Component {
     render() {
         if (!this.state.authenticated) {
             return (
-                <Route exact path="/" render={props => <Public {...props} _handleSignin={this._handleSignin}/>} />
-                // <Public _handleSignin={this._handleSignin}/>
+                <Public _handleSignin={this._handleSignin}/>
                     );
         } else {
-        return(
-            <Route exact path="/" render={props => <ProtectedComponents {...props} _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>} />
-                // <ProtectedComponents _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>
-        )
+            return(
+                <ProtectedComponents _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>
+            )
         }
     }
 }
 
-export default Main;
+const Navigator = StackNavigator({
+    Home: { screen: Main }
+})
+
+export default Navigator;

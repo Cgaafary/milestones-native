@@ -14,13 +14,11 @@ const ListItem = (props) => {
     const message = `You just clicked on ${props.fullName}`
     return(
       <TouchableHighlight 
-        /*onPress={() => Alert.alert('Clicked!', message)}*/
+        onPress={() => Alert.alert('Clicked!', message)}
         underlayColor="white"
         activeOpacity={0.7}>
         <View>
-      <Link to='/competencies'>
         <Text style={styles.listItemText}>{props.fullName}</Text>
-      </Link>
       </View>
       </TouchableHighlight>
       )

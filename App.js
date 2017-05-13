@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
-import { NativeRouter, Route, IndexRoute, Link } from 'react-router-native';
 import { ApolloProvider } from 'react-apollo';
 import { client } from './src/data/apolloClient';
 
@@ -11,11 +10,9 @@ export default class App extends React.Component {
   render() {
   return(
     <ApolloProvider client={client}>
-      <NativeRouter>
       <View style={styles.container}>
-        <Route exact path="/" component={Auth}/>
+        <Auth />
       </View>
-      </NativeRouter>
     </ApolloProvider>
   )}
 }

@@ -12,8 +12,7 @@ export default FacultyPage = (props) => {
             <Header>
                 <Text style={styles.headerTitle}>{fullName}</Text>
             </Header>
-            <Route path='/' component={StudentList} />
-            <Route path='/competencies' component={CompetencyChooser} />
+            <StudentList />
             <View>
             <Button title="Sign Out" onPress={props._handleSignout}/>
             </View>

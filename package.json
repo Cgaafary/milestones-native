@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "jest-expo": "^0.4.0",
+    "react-devtools": "^2.1.9",
     "react-native-scripts": "0.0.29",
     "react-test-renderer": "16.0.0-alpha.6"
   },
@@ -13,7 +14,8 @@
     "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch"
+    "test": "node node_modules/jest/bin/jest.js --watch",
+    "devtools": "react-devtools"
   },
   "jest": {
     "preset": "jest-expo"

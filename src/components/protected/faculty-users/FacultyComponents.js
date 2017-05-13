@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Button, Text } from 'react-native';
 
+import StudentList from './StudentList';
+
 export default FacultyPage = (props) => {
     const { fullName } = props.currentUser;
     return(
@@ -8,6 +10,7 @@ export default FacultyPage = (props) => {
             <Header>
                 <Text style={styles.headerTitle}>{fullName}</Text>
             </Header>
+            <StudentList />
             <View>
             <Button title="Sign Out" onPress={props._handleSignout}/>
             </View>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button, AsyncStorage } from 'react-native';
+import { Route } from 'react-router-native';
 import Header from './Header';
 import Login from './public/Login';
 import Public from './public/Public';
@@ -34,18 +35,16 @@ class Main extends Component {
     render() {
         if (!this.state.authenticated) {
             return (
-                <Public
-                    _handleSignin={this._handleSignin}/>)
+                <Route exact path="/" render={props => <Public {...props} _handleSignin={this._handleSignin}/>} />
+                // <Public _handleSignin={this._handleSignin}/>
+                    );
         } else {
         return(
-                <ProtectedComponents _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>
+            <Route exact path="/" render={props => <ProtectedComponents {...props} _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>} />
+                // <ProtectedComponents _handleSignout={this._handleSignout} currentUser={this.state.currentUser}/>
         )
         }
     }
 }
-
-const styles = StyleSheet.create({
-   
-});
 
 export default Main;

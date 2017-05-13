@@ -8,7 +8,7 @@ import getCurrentUser from '../../data/queries/getCurrentUser';
 class App extends React.Component {
 constructor(props) {
     super(props);
-    this.state = { email: 'cpfenning@ghs.org', password: '12345' }
+    this.state = { email: 'cpfennig@ghs.org', password: '12345' }
   }
 
   _handleButtonPress = () => {

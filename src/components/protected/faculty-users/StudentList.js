@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableHighlight, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
 import { graphql } from 'react-apollo';
 import { Link } from 'react-router-native';
 
@@ -24,33 +24,24 @@ const ListItem = (props) => {
       )
 }
 
-const StudentList = (props) => {
-    const keyExtractor = (item) => item.id;
+class StudentList extends Component {
+    render() {
+        const { loading, allUsers: students} = this.props.data;
 
-    const { loading, allUsers: students} = props.data;
-    console.log(students);
-    if (loading) { return <Text>Loading...</Text> }
-    return (
-        <View>
-            <Text style={styles.subheader}>Choose a Student</Text>
-            <FlatList
-                data={students}
-                renderItem={({item}) => <ListItem id={item.id} fullName={item.fullName}
-                keyExtractor={keyExtractor} />}
-            />
-        </View>
-    )
+        if (loading) { return <ActivityIndicator /> }
+        return (
+            <View>
+                <FlatList
+                    data={students}
+                    renderItem={({item}) => <ListItem id={item.id} fullName={item.fullName} />}
+                    keyExtractor={item => item.id}
+                />
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
-    subheader: {
-        color: colors.primary,
-        fontWeight: '600',
-        fontSize: 20,
-        alignSelf: 'center',
-        paddingTop: 5,
-        paddingBottom: 5
-    },
     listItemText: {
         fontSize: 25,
         color: colors.primary,

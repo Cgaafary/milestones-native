@@ -11,6 +11,19 @@ constructor(props) {
     this.state = { email: 'cpfennig@ghs.org', password: '12345' }
   }
 
+  static navigationOptions = {
+    title: 'Login',
+    headerStyle: {
+      backgroundColor: '#81B29A'
+    },
+    headerTitleStyle: {
+      color: 'white',
+      fontSize: 25,
+      fontWeight: '400'
+    },
+    headerLeft: null
+  }
+
   _handleButtonPress = () => {
     const { email, password } = this.state;
         this.props.mutate({
@@ -22,8 +35,9 @@ constructor(props) {
             }
         }).then(({ data }) => {
             const userAuthData = data.signinUser;
-            this.props._handleSignin(userAuthData);
-            console.log(userAuthData);
+            const { _handleSignin } = this.props;
+            _handleSignin(userAuthData);
+            // console.log(userAuthData);
 
         }).catch((error) => {
             console.log('There was an error: ', error);
@@ -67,7 +81,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
   },
   headerText: {
-    fontFamily: 'Arial',
     fontWeight: '400',
     fontSize: 25,
     color: 'white',
@@ -101,7 +114,6 @@ const styles = StyleSheet.create({
     color: '#3D405B',
     padding: 10,
     marginBottom: 20,
-    fontFamily: 'Avenir Next',
     fontWeight: 'bold'
   },
   buttonBorder: {

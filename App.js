@@ -2,16 +2,18 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
 import { ApolloProvider } from 'react-apollo';
 import { client } from './src/data/apolloClient';
+import { StackNavigator, TabNavigator } from 'react-navigation';
 
 import Login from './src/components/public/Login';
-import Auth from './src/components/Auth';
+import Home from './src/components/Home';
+import ProtectedComponents from './src/components/protected/ProtectedComponents';
 
 export default class App extends React.Component {
   render() {
   return(
     <ApolloProvider client={client}>
       <View style={styles.container}>
-        <Auth />
+        <Home />
       </View>
     </ApolloProvider>
   )}

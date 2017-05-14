@@ -1,8 +1,9 @@
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native';
+import API_KEY from '../../SECRET/API_KEY';
 
 const networkInterface = createNetworkInterface({
-  uri: 'https://api.graph.cool/simple/v1/cj24ze0w113d501157e5omwhu'
+  uri: API_KEY
 });
 
 networkInterface.use([{

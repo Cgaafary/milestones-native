@@ -1,4 +1,4 @@
-import react, {Component} from 'react';
+import React, {Component} from 'react';
 import {StackNavigator} from 'react-navigation';
 
 import StudentList from './StudentList';

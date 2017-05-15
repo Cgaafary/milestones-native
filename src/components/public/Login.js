@@ -1,6 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { StyleSheet, Text, View, Button, TextInput, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, AsyncStorage, ActivityIndicator } from 'react-native';
 
 import signinUser from '../../data/mutations/signinUser';
 import getCurrentUser from '../../data/queries/getCurrentUser';
@@ -8,7 +8,7 @@ import getCurrentUser from '../../data/queries/getCurrentUser';
 class App extends React.Component {
 constructor(props) {
     super(props);
-    this.state = { email: 'cpfennig@ghs.org', password: '12345' }
+    this.state = { email: 'cpfennig@ghs.org', password: '12345', loading: false }
   }
 
   static navigationOptions = {
@@ -26,6 +26,7 @@ constructor(props) {
 
   _handleButtonPress = () => {
     const { email, password } = this.state;
+    this.setState({loading: true})
         this.props.mutate({
             refetchQueries: [{
                 query: getCurrentUser
@@ -36,15 +37,17 @@ constructor(props) {
         }).then(({ data }) => {
             const userAuthData = data.signinUser;
             const { _handleSignin } = this.props;
+            this.setState({loading: false})
             _handleSignin(userAuthData);
-            // console.log(userAuthData);
-
+            
         }).catch((error) => {
+            this.setState({loading: false})
             console.log('There was an error: ', error);
         });
   };
 
   render() {
+    if(this.state.loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
     return (
       <View style={styles.container}>
         <View style={styles.bodyView}>

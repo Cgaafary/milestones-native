@@ -28,7 +28,7 @@ class StudentList extends Component {
     render() {
         const { loading, allUsers: students} = this.props.data;
 
-        if (loading) { return <ActivityIndicator /> }
+        if (loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
         return (
             <View>
                 <FlatList

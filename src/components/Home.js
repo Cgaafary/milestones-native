@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button, AsyncStorage, Text } from 'react-native';
+import { StyleSheet, View, Button, AsyncStorage, Text, ActivityIndicator } from 'react-native';
 import { NavigationActions, StackNavigator } from 'react-navigation';
+import { graphql } from 'react-apollo';
 
 import Login from './public/Login';
 import Public from './public/Public';
@@ -23,34 +24,12 @@ class Home extends Component {
     _handleSignin({user, token}) {
         AsyncStorage.setItem('token', token);
         this.setState({authenticated: true, currentUser: user});
-        // this.props.navigation.navigate('Protected', {
-        //     _handleSignout: this._handleSignout,
-        //     currentUser: this.state.currentUser
-        // });
     }
 
     _handleSignout() {
         AsyncStorage.removeItem('token');
         this.setState({authenticated: false});
-
-        const resetAction = NavigationActions.reset({
-            index: 0,
-            actions: [
-                NavigationActions.navigate({ routeName: 'Login'}, { _handleSignin: this._handleSignin } )
-            ]
-            })
-        this.props.navigation.dispatch(resetAction)
     }
-
-    // componentWillMount() {
-    //     const { navigate } = this.props.navigation;
-
-    //     if (!this.state.authenticated) {
-    //         navigate('Login', { _handleSignin: this._handleSignin })
-    //     } else {
-    //         this.props.navigation.navigate('ProtectedComponents')
-    //     }
-    // }
 
     render() {
         const { navigate } = this.props.navigation;
@@ -63,6 +42,8 @@ class Home extends Component {
     }
 
     render() {
+        const { loading } = this.props.data;
+        if (loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
         if (!this.state.authenticated) {
             return (
                 <Public _handleSignin={this._handleSignin}/>
@@ -75,5 +56,5 @@ class Home extends Component {
     }
 }
 
-
-export default Home;
+import getCurrentUser from '../data/queries/getCurrentUser';
+export default graphql(getCurrentUser)(Home);

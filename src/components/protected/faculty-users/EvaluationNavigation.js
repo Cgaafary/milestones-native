@@ -3,6 +3,7 @@ import {StackNavigator} from 'react-navigation';
 
 import StudentList from './StudentList';
 import CompetencyChooser from './CompetencyChooser';
+import EvaluationStack from './EvaluationStack';
 
 const EvaluationNavigation = StackNavigator({
     StudentList: {
@@ -13,6 +14,9 @@ const EvaluationNavigation = StackNavigator({
     },
     CompetencyChooser: {
         screen: CompetencyChooser
+    },
+    EvaluationStack: {
+        screen: EvaluationStack
     }
 })
 

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { StyleSheet, View, Text, AsyncStorage, ActivityIndicator, FlatList, Alert, TouchableHighlight } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import { graphql } from 'react-apollo';
 import getAllCompetencies from '../../../data/queries/getAllCompetencies';
 
@@ -11,14 +12,24 @@ const colors = {
 const ListItem = (props) => {
     const _handlePress = () => {
         console.log(props)
+        const { competency, currentUser, evaluatedUser, navigation: { dispatch }} = props;
+
+        const navigateToEvaluationStack = NavigationActions.navigate({
+            routeName: 'EvaluationStack',
+            params: { competency, currentUser, evaluatedUser }
+        })
+
+        dispatch(navigateToEvaluationStack);
     }
+
+    const { title } = props.competency;
     return(
       <TouchableHighlight 
         onPress={_handlePress}
         underlayColor="white"
         activeOpacity={0.7}>
         <View>
-        <Text style={styles.listItemText}>{props.title}</Text>
+        <Text style={styles.listItemText}>{title}</Text>
       </View>
       </TouchableHighlight>
       )
@@ -31,12 +42,16 @@ class CompetencyChooser extends Component {
 
     render() {
         const { loading, allCompetencies } = this.props.data;
+        const { currentUser } = this.props.screenProps;
+        const evaluatedUser  = this.props.navigation.state.params
         if (loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
+        console.log('CurrentUser: ', currentUser);
+        console.log('EvaluatedUser: ', evaluatedUser);
         return (
             <View>
                 <FlatList
                     data={allCompetencies}
-                    renderItem={({item}) => <ListItem id={item.id} title={item.title} navigation={this.props.navigation}/>}
+                    renderItem={({item}) => <ListItem competency={item} navigation={this.props.navigation} currentUser={currentUser} evaluatedUser={evaluatedUser}/>}
                     keyExtractor={item => item.id}
                     style={styles.listContainer}
                 />

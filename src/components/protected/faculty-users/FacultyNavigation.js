@@ -5,14 +5,15 @@ import { Constants } from 'expo';
 
 import EvaluationNavigation from './EvaluationNavigation';
 import Profile from '../Profile';
-import EvaluationStack from './EvaluationStack';
 
 import evaluateIcon from './img/True-False-100.png';
 import reviewIcon from './img/Bar-Chart-100.png';
 import profileIcon from './img/User-100.png';
 
 const Review = () => (
-    <EvaluationStack style={{flex: 1}} />
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text>Placeholder for metrics review</Text>
+    </View>
 )
 
 

@@ -11,7 +11,6 @@ const colors = {
 
 const ListItem = (props) => {
     const _handlePress = () => {
-        console.log(props)
         const { competency, currentUser, evaluatedUser, navigation: { dispatch }} = props;
 
         const navigateToEvaluationStack = NavigationActions.navigate({
@@ -45,8 +44,6 @@ class CompetencyChooser extends Component {
         const { currentUser } = this.props.screenProps;
         const evaluatedUser  = this.props.navigation.state.params
         if (loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
-        console.log('CurrentUser: ', currentUser);
-        console.log('EvaluatedUser: ', evaluatedUser);
         return (
             <View>
                 <FlatList

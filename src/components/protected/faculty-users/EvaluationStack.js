@@ -3,9 +3,12 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import { graphql } from 'react-apollo';
 import SwipeCards from 'react-native-swipe-cards';
 
+import getCompetencyData from '../../../data/queries/getCompetencyData';
+import { getObjectById, reformatArrayByLevel } from '../../../assets/customFunctions';
+
 const Card = (props) => (
     <View style={styles.card}>
-        <Text>{props.text}</Text>
+        <Text>{props.description}</Text>
       </View>
 )
 
@@ -27,11 +30,26 @@ const Cards = [
 class EvaluationStack extends Component {
     constructor() {
         super();
-        this.state = { cards: Cards }
+        this.state = { 
+            cards: Cards ,
+            currentMilestones: [],
+        }
     }
 
     static navigationOptions = {
         title: 'Evaluate'
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { loading } = nextProps.data;
+        if (loading) { return }
+
+        const { milestones } = nextProps.data.Competency;
+        const milestonesByLevel = reformatArrayByLevel(milestones);
+        this.setState({
+            currentMilestones: milestonesByLevel,
+            cards: milestonesByLevel[0]
+        })
     }
 
     handleYup (card) {
@@ -47,8 +65,9 @@ class EvaluationStack extends Component {
     }
     
     render() {
-        // If you want a stack of cards instead of one-per-one view, activate stack mode
-        // stack={true}
+        console.log('Evaluation Stack Props: ',this.props.navigation.state.params.competency)
+        console.log(this.props.data);
+        console.log(this.state);
         return (
         <SwipeCards
             cards={this.state.cards}
@@ -87,4 +106,6 @@ const styles = StyleSheet.create({
   }
 })
 
-export default EvaluationStack;
+export default graphql(getCompetencyData, {
+    options: ({navigation}) => ({ variables: { competencyId: navigation.state.params.competency.id }})
+})(EvaluationStack)

@@ -28,13 +28,12 @@ networkInterface.use([{
 
     AsyncStorage.getItem('TOKEN')
       .then((response) => {
-        console.log('Sucessful token: ', response)
         const token = response;
         req.options.headers.authorization = token ? `Bearer ${token}` : null;
         next();
       }).catch((error) => {
         console.log('Token Error: ', error)
-        req.options.headers.authorization = token ? `Bearer ${token}` : null;
+        req.options.headers.authorization = null;
         next();
       })
   }

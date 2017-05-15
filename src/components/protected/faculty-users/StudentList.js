@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         paddingTop: 5,
         paddingLeft: 30
-  },
+    },
     listContainer: {
         paddingTop: 20
     }

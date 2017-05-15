@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button, Text, Image } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
+import { Constants } from 'expo';
 
 import EvaluationNavigation from './EvaluationNavigation';
 import Profile from '../Profile';
@@ -52,7 +53,8 @@ const FacultyNavigation = TabNavigator({
             )
         })
     }
-});
+}
+);
 
 const styles = StyleSheet.create({
     icon: {

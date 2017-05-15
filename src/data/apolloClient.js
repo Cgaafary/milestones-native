@@ -26,9 +26,17 @@ networkInterface.use([{
       req.options.headers = {};
     }
 
-    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTc0MTA1MjksImlhdCI6MTQ5NDgxODUyOSwicHJvamVjdElkIjoiY2oyNHplMHcxMTNkNTAxMTU3ZTVvbXdodSIsInVzZXJJZCI6ImNqMjU2cGkxaGQxejAwMTI5ZmY0NDF6YzIiLCJhdXRoRGF0YSI6eyJlbWFpbCI6ImNwZmVubmlnQGdocy5vcmcifSwibW9kZWxOYW1lIjoiVXNlciJ9.PpDMmRttpjgZXa9P5AVFCv6MVzP70RQcEwMGxoIkbi8'
-    req.options.headers.authorization = token ? `Bearer ${token}` : null;
-    next();
+    AsyncStorage.getItem('TOKEN')
+      .then((response) => {
+        console.log('Sucessful token: ', response)
+        const token = response;
+        req.options.headers.authorization = token ? `Bearer ${token}` : null;
+        next();
+      }).catch((error) => {
+        console.log('Token Error: ', error)
+        req.options.headers.authorization = token ? `Bearer ${token}` : null;
+        next();
+      })
   }
 }])
 

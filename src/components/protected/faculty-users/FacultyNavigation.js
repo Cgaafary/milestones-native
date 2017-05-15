@@ -5,12 +5,15 @@ import { StackNavigator, TabNavigator } from 'react-navigation';
 import EvaluationNavigation from './EvaluationNavigation';
 import Profile from '../Profile';
 
-const Evaluate = () => (
-    <Text>This is the Evaluate screen</Text>
-)
+import evaluateIcon from './img/True-False-100.png';
+import reviewIcon from './img/Bar-Chart-100.png';
+import profileIcon from './img/User-100.png';
 
 const Review = () => (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}} >
     <Text>This is the Review screen</Text>
+    <Text>Will add content later</Text>
+    </View>
 )
 
 
@@ -21,7 +24,7 @@ const FacultyNavigation = TabNavigator({
             title: 'Evaluate',
             tabBarIcon: ({ tintColor }) => (
                 <Image
-                    source={require('./True-False-100.png')}
+                    source={evaluateIcon}
                     style={[styles.icon, {tintColor: tintColor}]}
                 />
             )
@@ -32,7 +35,7 @@ const FacultyNavigation = TabNavigator({
         navigationOptions: ({navigation}) => ({
             tabBarIcon: ({ tintColor }) => (
                 <Image
-                    source={require('./Bar-Chart-100.png')}
+                    source={reviewIcon}
                     style={[styles.icon, {tintColor: tintColor}]}
                 />
             )
@@ -43,7 +46,7 @@ const FacultyNavigation = TabNavigator({
         navigationOptions: ({navigation}) => ({
             tabBarIcon: ({ tintColor }) => (
                 <Image
-                    source={require('./User-100.png')}
+                    source={profileIcon}
                     style={[styles.icon, {tintColor: tintColor}]}
                 />
             )

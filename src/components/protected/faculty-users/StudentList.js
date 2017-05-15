@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
 import { graphql } from 'react-apollo';
-import { Link } from 'react-router-native';
+import { NavigationActions } from 'react-navigation';
 
 import getStudents from '../../../data/queries/getStudents';
 
@@ -12,9 +12,17 @@ const colors = {
 
 const ListItem = (props) => {
     const message = `You just clicked on ${props.fullName}`
+    const navigateToCompetencyChooser = NavigationActions.navigate({
+        routeName: 'CompetencyChooser',
+        params: {id: props.id, fullName: props.fullName}
+    })
+    const _handlePress = () => {
+        props.navigation.dispatch(navigateToCompetencyChooser)
+    }
+
     return(
       <TouchableHighlight 
-        onPress={() => Alert.alert('Clicked!', message)}
+        onPress={_handlePress}
         underlayColor="white"
         activeOpacity={0.7}>
         <View>
@@ -33,8 +41,9 @@ class StudentList extends Component {
             <View>
                 <FlatList
                     data={students}
-                    renderItem={({item}) => <ListItem id={item.id} fullName={item.fullName} />}
+                    renderItem={({item}) => <ListItem id={item.id} fullName={item.fullName} navigation={this.props.navigation}/>}
                     keyExtractor={item => item.id}
+                    style={styles.listContainer}
                 />
             </View>
         )
@@ -49,7 +58,10 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         paddingTop: 5,
         paddingLeft: 30
-  }
+  },
+    listContainer: {
+        paddingTop: 20
+    }
 })
 
 export default graphql(getStudents)(StudentList);

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, ActivityIndicator} from 'react-native';
 import { graphql } from 'react-apollo';
 import SwipeCards from 'react-native-swipe-cards';
 
 import getCompetencyData from '../../../data/queries/getCompetencyData';
+import submitEvaluation from '../../../data/mutations/submitEvaluation';
+
 import { getObjectById, reformatArrayByLevel } from '../../../assets/customFunctions';
 
 const Card = (props) => (
@@ -74,18 +76,6 @@ class EvaluationStack extends Component {
         })
     }
 
-    cardRemoved(index) {
-        // console.log(`The index is ${index}`);
-        const { achievedAtCurrentLvl, displayedCards, milestoneIndex, payload } = this.state;
-        // const { displayedCards } = this.state;
-
-        if (displayedCards.length === index + 1) {
-            console.log('Finished Level!')
-            this.setState({outOfCards: true})
-        }
-
-    }
-
     componentDidUpdate() {
         const { achievedAtCurrentLvl, displayedCards, outOfCards, milestoneIndex, payload } = this.state;
         // console.log('Achieved at current lvl: ', this.state.achievedAtCurrentLvl)
@@ -95,7 +85,18 @@ class EvaluationStack extends Component {
             this.advanceLevel();
         } else if (outOfCards) {
             console.log("Sorry you didn't successfully complete the level")
-            console.log(payload)
+            this.submitPayload();
+        }
+    }
+
+    cardRemoved(index) {
+        // console.log(`The index is ${index}`);
+        const { achievedAtCurrentLvl, displayedCards, milestoneIndex, payload } = this.state;
+        // const { displayedCards } = this.state;
+
+        if (displayedCards.length === index + 1) {
+            console.log('Finished Level!')
+            this.setState({outOfCards: true})
         }
 
     }
@@ -135,7 +136,7 @@ class EvaluationStack extends Component {
         // Exit function if there are no more levels
         if (!milestoneData[newIndex]) { 
             console.log('Completed all levels', payload);
-            // this.submitPayload();
+            this.submitPayload();
             return; 
         }
 
@@ -146,9 +147,32 @@ class EvaluationStack extends Component {
             outOfCards: false
         })
     }
+
+    // Submits evaluation data to the server **Pending
+    submitPayload() {
+        const { payload } = this.state;
+        // eslint-disable-next-line
+        payload.map(({achieved, evaluatedUser, evaluatingUser, milestone}) => {
+            this.props.mutate({
+                variables: {
+                    achieved,
+                    evaluatedUserId: evaluatedUser,
+                    evaluatingUserId: evaluatingUser,
+                    milestoneId: milestone
+                }
+            })
+            .then(({ data }) => {
+                console.log('got data', data);
+            }).catch((error) => {
+                console.log('there was an error', error);
+            })
+        });
+    }
     
     render() {
         const { competency, currentUser, evaluatedUser } = this.props.navigation.state.params;
+        const { loading } = this.props.data;
+        if (loading) { return <View style={{flex: 1, justifyContent: 'center', alignContent: 'center'}}><ActivityIndicator size="large" /></View> }
         return (
         <SwipeCards
             cards={this.state.displayedCards}
@@ -187,6 +211,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default graphql(getCompetencyData, {
+export default graphql(submitEvaluation)(
+graphql(getCompetencyData, {
     options: ({navigation}) => ({ variables: { competencyId: navigation.state.params.competency.id }})
-})(EvaluationStack)
+})(EvaluationStack));

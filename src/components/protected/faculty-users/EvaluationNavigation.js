@@ -5,7 +5,7 @@ import StudentList from './StudentList';
 import CompetencyChooser from './CompetencyChooser';
 import EvaluationStack from './EvaluationStack';
 
-const EvaluationNavigation = StackNavigator({
+const EvaluationNavigation: NavigationContainer = StackNavigator({
     StudentList: {
         screen: StudentList,
         navigationOptions: ({navigation}) => ({

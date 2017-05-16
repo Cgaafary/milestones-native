@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "0.40.0",
     "jest-expo": "^0.4.0",
     "react-devtools": "^2.1.9",
     "react-native-scripts": "0.0.29",
@@ -16,7 +19,11 @@
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
     "test": "node node_modules/jest/bin/jest.js --watch",
-    "devtools": "react-devtools"
+    "devtools": "react-devtools",
+    "flow start": "flow start",
+    "flow stop": "flow stop",
+    "flow status": "flow status",
+    "flow coverage": "flow coverage"
   },
   "jest": {
     "preset": "jest-expo"

@@ -14,8 +14,6 @@ export default class ProtectedComponents extends Component {
     
     render() {
         const {fullName, userType} = this.props.currentUser;
-        console.log("accessed Protected Components",fullName);
-
         return userType === 'FACULTY' ? <FacultyNavigation screenProps={this.props} /> : <StudentComponents />
     }
 }

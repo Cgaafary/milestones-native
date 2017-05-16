@@ -12,30 +12,19 @@ const Card = (props) => (
       </View>
 )
 
-const NoMoreCards = (props) => {
-    return (
-        <View>
-            <Text style={styles.noMoreCardsText}>No more cards</Text>
-        </View>
-    )
-}
+const NoMoreCards = (props) => (
+    <View>
+        <Text style={styles.noMoreCardsText}>No more cards</Text>
+    </View>
+)
 
 const Cards = [
-    [
-        {description: 'Card 1 - Level 1', id: '11'},
-        {description: 'Card 2 - Level 1', id: '21'},
-        {description: 'Card 3 - Level 1', id: '31'}
-    ],
-    [
-        {description: 'Card 1 - Level 2', id: '12'},
-        {description: 'Card 2 - Level 2', id: '22'},
-        {description: 'Card 3 - Level 2', id: '32'}
-    ],
-    [
-        {description: 'Card 1 - Level 3', id: '13'},
-        {description: 'Card 2 - Level 3', id: '23'},
-        {description: 'Card 3 - Level 3', id: '33'}
-    ]
+  {text: 'Tomato', backgroundColor: 'red'},
+  {text: 'Aubergine', backgroundColor: 'purple'},
+  {text: 'Courgette', backgroundColor: 'green'},
+  {text: 'Blueberry', backgroundColor: 'blue'},
+  {text: 'Umm...', backgroundColor: 'cyan'},
+  {text: 'orange', backgroundColor: 'orange'},
 ]
 
 class EvaluationStack extends Component {
@@ -44,9 +33,9 @@ class EvaluationStack extends Component {
         this.state = { 
             displayedCards: [],
             milestoneData: [],
+            currentLevelLength: [],
             milestoneIndex: 0,
             achievedAtCurrentLvl: 0,
-            outOfCards: false,
             payload: []
         }
 
@@ -70,34 +59,19 @@ class EvaluationStack extends Component {
         console.log('MilestoneData ', milestonesByLevel)
         this.setState({
             milestoneData: milestonesByLevel,
-            displayedCards: milestonesByLevel[0],
+            displayedCards: milestonesByLevel[1],
+            currentLevelLength: milestonesByLevel[1].length
         })
     }
 
     cardRemoved(index) {
-        // console.log(`The index is ${index}`);
-        const { achievedAtCurrentLvl, displayedCards, milestoneIndex, payload } = this.state;
-        // const { displayedCards } = this.state;
-
-        if (displayedCards.length === index + 1) {
-            console.log('Finished Level!')
-            this.setState({outOfCards: true})
-        }
-
-    }
-
-    componentDidUpdate() {
-        const { achievedAtCurrentLvl, displayedCards, outOfCards, milestoneIndex, payload } = this.state;
-        // console.log('Achieved at current lvl: ', this.state.achievedAtCurrentLvl)
-
-        if (achievedAtCurrentLvl === displayedCards.length) {
+        const { achievedAtCurrentLvl, currentLevelLength, displayedCards, milestoneIndex, payload } = this.state;
+        if (achievedAtCurrentLvl === currentLevelLength) {
             console.log(`Level ${milestoneIndex + 1} achieved`);
             this.advanceLevel();
-        } else if (outOfCards) {
-            console.log("Sorry you didn't successfully complete the level")
-            console.log(payload)
+        } else if (!displayedCards.length) {
+            console.log('Payload to submit to server: ', payload);
         }
-
     }
 
     handleYup (card) {
@@ -107,6 +81,11 @@ class EvaluationStack extends Component {
         const evaluatingUser = currentUser.id;
         const milestone = card.id;
         const achieved = true;
+
+        // Filters out the submitted milestone evaluated
+        const milestoneObject = getObjectById(milestone, displayedCards);
+        const filteredMilestones = displayedCards.filter(value => value !== milestoneObject);
+        this.setState({displayedCards: filteredMilestones});
 
         // Change state for achieved milestones
         payload.push({milestone, achieved, evaluatedUser: evaluatedUser.id, evaluatingUser});
@@ -118,41 +97,40 @@ class EvaluationStack extends Component {
 
     handleNope (card) {
         console.log(`Nope for ${card.description}`)
-        var { payload } = this.state;
-        const { competency, currentUser, evaluatedUser } = this.props.navigation.state.params;
-        const evaluatingUser = currentUser.id;
-        const milestone = card.id;
-        const achieved = false;
+        console.log(this.state);
+    }
 
-        payload.push({milestone, achieved, evaluatedUser: evaluatedUser.id, evaluatingUser});
-        this.setState({payload});
+    handleMaybe (card) {
+        console.log(`Maybe for ${card.text}`)
     }
 
     advanceLevel () {
-        const { milestoneIndex, milestoneData, displayedCards, payload } = this.state;
+        const { milestoneIndex, milestoneData } = this.state;
         const newIndex = milestoneIndex + 1;
 
         // Exit function if there are no more levels
         if (!milestoneData[newIndex]) { 
-            console.log('Completed all levels', payload);
-            // this.submitPayload();
+            console.log('Completed all levels');
+            this.submitPayload();
             return; 
         }
 
         this.setState({
-            displayedCards: milestoneData[newIndex],
+            displayedCards: this.state.displayedCards.concat(milestoneData[newIndex]),
             milestoneIndex: newIndex,
-            achievedAtCurrentLvl: 0,
-            outOfCards: false
+            currentLevelLength: milestoneData[newIndex].length,
+            achievedAtCurrentLvl: 0
         })
     }
     
     render() {
         const { competency, currentUser, evaluatedUser } = this.props.navigation.state.params;
+        // console.log('Competency: ',competency);
+        // console.log('Current User', currentUser);
+        // console.log('Evaluated User', evaluatedUser);
         return (
         <SwipeCards
             cards={this.state.displayedCards}
-            loop={false}
 
             renderCard={(cardData) => <Card {...cardData} />}
             renderNoMoreCards={() => <NoMoreCards />}
@@ -162,6 +140,8 @@ class EvaluationStack extends Component {
 
             handleYup={this.handleYup}
             handleNope={this.handleNope}
+            handleMaybe={this.handleMaybe}
+            hasMaybeAction={true}
             cardRemoved={this.cardRemoved}
         />
         )

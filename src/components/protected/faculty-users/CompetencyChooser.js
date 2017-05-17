@@ -29,7 +29,7 @@ const ListItem = (props) => {
         activeOpacity={0.7}>
         <View>
         <Text style={styles.listItemText}>{title}</Text>
-      </View>
+        </View>
       </TouchableHighlight>
       )
 }

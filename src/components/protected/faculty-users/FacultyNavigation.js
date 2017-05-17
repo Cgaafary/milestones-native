@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button, Text, Image } from 'react-native';
+import { StyleSheet, View, Button, Text, Image, Platform } from 'react-native';
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import { Constants } from 'expo';
 
@@ -52,7 +52,15 @@ const FacultyNavigation = TabNavigator({
             )
         })
     }
-}
+},
+    {
+        tabBarOptions: {
+            activeTintColor: '#3D405B',
+            tabStyle: {
+                paddingTop: (Platform.OS === 'android') ? Constants.statusBarHeight + 10 : 0
+            }
+        }
+    }
 );
 
 const styles = StyleSheet.create({

@@ -7,6 +7,7 @@ import { NavigationActions } from 'react-navigation';
 import getCompetencyData from "../../../data/queries/getCompetencyData";
 import submitEvaluation from "../../../data/mutations/submitEvaluation";
 import submitCompetencyAchievement from '../../../data/mutations/submitCompetencyAchievement';
+import getCompetenciesForUser from '../../../data/queries/getCompetenciesForUser';
 
 import {
   getObjectById,
@@ -20,6 +21,18 @@ const Card = props => (
 );
 
 const NoMoreCards = props => {
+  const { evaluatedUser } = props.navigation.state.params;
+  const returnToCompetencyChooser = NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({
+          routeName: 'CompetencyChooser',
+          params: { 
+            evaluatedUser: evaluatedUser }
+        })
+    ]
+  })
+
   const returnToStudentList = NavigationActions.reset({
     index: 0,
     actions: [
@@ -28,32 +41,16 @@ const NoMoreCards = props => {
         })
     ]
   })
-  console.log(props)
+  
+  console.log("No more cards props", evaluatedUser);
   return (
     <View>
       <Text style={styles.noMoreCardsText}>Evaluation Submitted!</Text>
-      <Button title="Another" onPress={() => props.navigation.dispatch(returnToStudentList)}/>
+      <Button title="Another" onPress={() => props.navigation.dispatch(returnToCompetencyChooser)}/>
+      <Button title="Finished" onPress={() => props.navigation.dispatch(returnToStudentList)}/>
     </View>
   );
 };
-
-const Cards = [
-  [
-    { description: "Card 1 - Level 1", id: "11" },
-    { description: "Card 2 - Level 1", id: "21" },
-    { description: "Card 3 - Level 1", id: "31" }
-  ],
-  [
-    { description: "Card 1 - Level 2", id: "12" },
-    { description: "Card 2 - Level 2", id: "22" },
-    { description: "Card 3 - Level 2", id: "32" }
-  ],
-  [
-    { description: "Card 1 - Level 3", id: "13" },
-    { description: "Card 2 - Level 3", id: "23" },
-    { description: "Card 3 - Level 3", id: "33" }
-  ]
-];
 
 class EvaluationStack extends Component {
   constructor() {
@@ -226,7 +223,13 @@ class EvaluationStack extends Component {
         evaluatingUser: currentUser.id,
         competency: competency.id,
         level: achievedLevel
-      }
+      }, 
+      refetchQueries:[{
+        query: getCompetenciesForUser,
+        variables: {
+          user: evaluatedUser.id
+        }
+      }]
     })
     .then(({data}) => { console.log("submit competency achievement data", data)})
     .catch(error => { console.log("submit competency achievement error", error)});

@@ -14,7 +14,7 @@ const ListItem = (props) => {
     const message = `You just clicked on ${props.fullName}`
     const navigateToCompetencyChooser = NavigationActions.navigate({
         routeName: 'CompetencyChooser',
-        params: {id: props.id, fullName: props.fullName}
+        params: {evaluatedUser: props}
     })
     const _handlePress = () => {
         props.navigation.dispatch(navigateToCompetencyChooser)

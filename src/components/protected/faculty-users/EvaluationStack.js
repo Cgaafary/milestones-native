@@ -107,7 +107,7 @@ class EvaluationStack extends Component {
       this.advanceLevel();
     } else if (outOfCards) {
       console.log("Sorry you didn't successfully complete the level");
-      this.submitPayload();
+      this.submitPayload(currentLevel);
     }
   }
 
@@ -151,7 +151,7 @@ class EvaluationStack extends Component {
   }
 
   handleNope(card) {
-    console.log(`Nope for ${card.description}`);
+    // console.log(`Nope for ${card.description}`);
     var { payload } = this.state;
     const {
       competency,
@@ -184,7 +184,7 @@ class EvaluationStack extends Component {
     // Exit function if there are no more levels
     if (!milestoneData[newIndex]) {
       console.log("Completed all levels", payload);
-      this.submitPayload();
+      this.submitPayload(newIndex);
       return;
     }
 
@@ -197,7 +197,7 @@ class EvaluationStack extends Component {
   }
 
   // Submits evaluation data to the server **Pending
-  submitPayload() {
+  submitPayload(achievedLevel) {
     const { payload } = this.state;
     const { submitEvaluation, submitCompetencyAchievement } = this.props;
     // eslint-disable-next-line
@@ -220,21 +220,16 @@ class EvaluationStack extends Component {
     });
 
     const { competency, currentUser, evaluatedUser } = this.props.navigation.state.params;
-    const { currentLevel } = this.state;
-    console.log('competency = ', competency);
-    console.log('evaluating user = ', currentUser)
-    console.log('evaluated user = ', evaluatedUser)
-    console.log('level = ', currentLevel);
-    // submitCompetencyAchievement({
-    //   variables: {
-    //     evaluatedUser,
-    //     evaluatingUser: currentUser,
-    //     competency,
-    //     level: currentLevel
-    //   }
-    // })
-    // .then(({data}) => { console.log("submit competency achievement data", data)})
-    // .catch(error => { console.log("submit competency achievement error", error)});
+    submitCompetencyAchievement({
+      variables: {
+        evaluatedUser: evaluatedUser.id,
+        evaluatingUser: currentUser.id,
+        competency: competency.id,
+        level: achievedLevel
+      }
+    })
+    .then(({data}) => { console.log("submit competency achievement data", data)})
+    .catch(error => { console.log("submit competency achievement error", error)});
   }
 
   render() {

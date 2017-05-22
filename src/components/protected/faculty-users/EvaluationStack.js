@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, ActivityIndicator, Button } from "react-native";
-import { graphql } from "react-apollo";
+import { graphql, compose } from "react-apollo";
 import SwipeCards from "react-native-swipe-cards";
 import { NavigationActions } from 'react-navigation';
 
 import getCompetencyData from "../../../data/queries/getCompetencyData";
 import submitEvaluation from "../../../data/mutations/submitEvaluation";
+import submitCompetencyAchievement from '../../../data/mutations/submitCompetencyAchievement';
 
 import {
   getObjectById,
@@ -60,7 +61,7 @@ class EvaluationStack extends Component {
     this.state = {
       displayedCards: [],
       milestoneData: [],
-      milestoneIndex: 0,
+      currentLevel: 0,
       achievedAtCurrentLvl: 0,
       outOfCards: false,
       payload: []
@@ -97,13 +98,12 @@ class EvaluationStack extends Component {
       achievedAtCurrentLvl,
       displayedCards,
       outOfCards,
-      milestoneIndex,
+      currentLevel,
       payload
     } = this.state;
     // console.log('Achieved at current lvl: ', this.state.achievedAtCurrentLvl)
 
     if (achievedAtCurrentLvl === displayedCards.length) {
-      console.log(`Level ${milestoneIndex + 1} achieved`);
       this.advanceLevel();
     } else if (outOfCards) {
       console.log("Sorry you didn't successfully complete the level");
@@ -116,19 +116,17 @@ class EvaluationStack extends Component {
     const {
       achievedAtCurrentLvl,
       displayedCards,
-      milestoneIndex,
+      currentLevel,
       payload
     } = this.state;
-    // const { displayedCards } = this.state;
 
     if (displayedCards.length === index + 1) {
-      console.log("Finished Level!");
       this.setState({ outOfCards: true });
     }
   }
 
   handleYup(card) {
-    console.log(`Yup for ${card.description}`);
+    // console.log(`Yup for ${card.description}`);
     var { payload, displayedCards, achievedAtCurrentLvl } = this.state;
     const {
       competency,
@@ -175,12 +173,13 @@ class EvaluationStack extends Component {
 
   advanceLevel() {
     const {
-      milestoneIndex,
+      currentLevel,
       milestoneData,
       displayedCards,
       payload
     } = this.state;
-    const newIndex = milestoneIndex + 1;
+    const newIndex = currentLevel + 1;
+    console.log(`Awarded Level ${newIndex}`)
 
     // Exit function if there are no more levels
     if (!milestoneData[newIndex]) {
@@ -191,7 +190,7 @@ class EvaluationStack extends Component {
 
     this.setState({
       displayedCards: milestoneData[newIndex],
-      milestoneIndex: newIndex,
+      currentLevel: newIndex,
       achievedAtCurrentLvl: 0,
       outOfCards: false
     });
@@ -200,24 +199,42 @@ class EvaluationStack extends Component {
   // Submits evaluation data to the server **Pending
   submitPayload() {
     const { payload } = this.state;
+    const { submitEvaluation, submitCompetencyAchievement } = this.props;
     // eslint-disable-next-line
     payload.map(({ achieved, evaluatedUser, evaluatingUser, milestone }) => {
-      this.props
-        .mutate({
+        // Submit the evaluation object to the server
+        submitEvaluation({
           variables: {
             achieved,
-            evaluatedUserId: evaluatedUser,
-            evaluatingUserId: evaluatingUser,
-            milestoneId: milestone
+            evaluatedUser,
+            evaluatingUser,
+            milestone
           }
         })
         .then(({ data }) => {
-          console.log("got data", data);
+          console.log("submit evaluation data", data);
         })
         .catch(error => {
-          console.log("there was an error", error);
+          console.log("submit evaluation error", error);
         });
     });
+
+    const { competency, currentUser, evaluatedUser } = this.props.navigation.state.params;
+    const { currentLevel } = this.state;
+    console.log('competency = ', competency);
+    console.log('evaluating user = ', currentUser)
+    console.log('evaluated user = ', evaluatedUser)
+    console.log('level = ', currentLevel);
+    // submitCompetencyAchievement({
+    //   variables: {
+    //     evaluatedUser,
+    //     evaluatingUser: currentUser,
+    //     competency,
+    //     level: currentLevel
+    //   }
+    // })
+    // .then(({data}) => { console.log("submit competency achievement data", data)})
+    // .catch(error => { console.log("submit competency achievement error", error)});
   }
 
   render() {
@@ -283,10 +300,20 @@ const styles = StyleSheet.create({
   }
 });
 
-export default graphql(submitEvaluation)(
+// export default graphql(submitEvaluation)(
+//   graphql(getCompetencyData, {
+//     options: ({ navigation }) => ({
+//       variables: { competencyId: navigation.state.params.competency.id }
+//     })
+//   })(EvaluationStack)
+// );
+
+export default compose(
+  graphql(submitEvaluation, { name: 'submitEvaluation'}),
+  graphql(submitCompetencyAchievement, { name: 'submitCompetencyAchievement'}),
   graphql(getCompetencyData, {
     options: ({ navigation }) => ({
       variables: { competencyId: navigation.state.params.competency.id }
     })
-  })(EvaluationStack)
-);
+  })
+)(EvaluationStack);

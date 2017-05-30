@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Button, Text, Image, Platform } from 'react-native';
+import React from 'react';
+import { StyleSheet, Image, Platform } from 'react-native';
 import { TabNavigator } from 'react-navigation';
 import { Constants } from 'expo';
 
@@ -18,46 +18,32 @@ const styles = StyleSheet.create({
   },
 });
 
-const Review = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Placeholder for metrics review</Text>
-  </View>
-);
-
 const FacultyNavigation = TabNavigator(
   {
     Evaluate: {
       screen: EvaluationNavigation,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         title: 'Evaluate',
         tabBarIcon: ({ tintColor }) => (
-          <Image
-            source={evaluateIcon}
-            style={[styles.icon, { tintColor }]}
-          />
+          <Image source={evaluateIcon} style={[styles.icon, { tintColor }]} />
         ),
       }),
     },
     Review: {
       screen: ReviewNavigation,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
+        title: 'Review',
         tabBarIcon: ({ tintColor }) => (
-          <Image
-            source={reviewIcon}
-            style={[styles.icon, { tintColor }]}
-          />
+          <Image source={reviewIcon} style={[styles.icon, { tintColor }]} />
         ),
       }),
       screenProps: 'Hello',
     },
     Profile: {
       screen: Profile,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         tabBarIcon: ({ tintColor }) => (
-          <Image
-            source={profileIcon}
-            style={[styles.icon, { tintColor }]}
-          />
+          <Image source={profileIcon} style={[styles.icon, { tintColor }]} />
         ),
       }),
     },

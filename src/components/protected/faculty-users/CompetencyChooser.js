@@ -20,6 +20,30 @@ const colors = {
   secondary: '#81B29A',
 };
 
+const styles = StyleSheet.create({
+  listItemText: {
+    fontSize: 20,
+    color: colors.primary,
+    fontWeight: '300',
+    paddingLeft: 10,
+  },
+  listItemCounter: {
+    color: colors.secondary,
+    fontSize: 20,
+    fontWeight: '300',
+  },
+  listItemContainer: {
+    paddingTop: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingBottom: 5,
+    flexDirection: 'row',
+  },
+  listContainer: {
+    paddingTop: 20,
+  },
+});
+
 const ListItem = (props) => {
   const _handlePress = () => {
     const {
@@ -29,11 +53,7 @@ const ListItem = (props) => {
       navigation: { dispatch },
     } = props;
 
-    const { navigation } = evaluatedUser;
-    const { state } = navigation;
-    const { params } = state;
-    const { isReview } = params;
-    console.log("CompetencyChooser", isReview)
+    const { isReview } = evaluatedUser.navigation.state.params;
 
     const navigateToEvaluationStack = NavigationActions.navigate({
       routeName: isReview ? 'Review' : 'EvaluationStack',
@@ -68,7 +88,6 @@ class CompetencyChooser extends Component {
     const { currentUser } = this.props.screenProps;
     const { evaluatedUser } = this.props.navigation.state.params;
 
-
     if (loading) {
       return (
         <View
@@ -97,30 +116,6 @@ class CompetencyChooser extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  listItemText: {
-    fontSize: 20,
-    color: colors.primary,
-    fontWeight: '300',
-    paddingLeft: 10,
-  },
-  listItemCounter: {
-    color: colors.secondary,
-    fontSize: 20,
-    fontWeight: '300',
-  },
-  listItemContainer: {
-    paddingTop: 5,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingBottom: 5,
-    flexDirection: 'row',
-  },
-  listContainer: {
-    paddingTop: 20,
-  },
-});
 
 export default graphql(getCompetenciesForUser, {
   options: ({ navigation }) => ({

@@ -5,7 +5,6 @@ import {
   FlatList,
   StyleSheet,
   TouchableHighlight,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { graphql } from 'react-apollo';
@@ -43,7 +42,6 @@ const ListItem = (props) => {
 class StudentList extends Component {
   render() {
     const { loading, allUsers: students } = this.props.data;
-    console.log(this.props);
 
     if (loading) {
       return (

@@ -1,4 +1,6 @@
 import { StackNavigator } from 'react-navigation';
+import React from 'react';
+import { View, Text } from 'react-native';
 
 import StudentList from './StudentList';
 import CompetencyChooser from './CompetencyChooser';
@@ -6,7 +8,17 @@ import EvaluationStack from './EvaluationStack';
 
 import { stackNavigatorStyles as styles } from '../../../assets/styles';
 
-const EvaluationNavigation = StackNavigator(
+const Review = (props) => {
+  console.log('hello review');
+  console.log(props);
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Placeholder for metrics review</Text>
+    </View>
+  );
+};
+
+const ReviewNavigation = StackNavigator(
   {
     StudentList: {
       screen: StudentList,
@@ -23,8 +35,8 @@ const EvaluationNavigation = StackNavigator(
         headerTintColor: styles.headerTintColor,
       }),
     },
-    EvaluationStack: {
-      screen: EvaluationStack,
+    Review: {
+      screen: Review,
       navigationOptions: ({ navigation }) => ({
         headerStyle: styles.headerStyle,
         headerTintColor: styles.headerTintColor,
@@ -33,9 +45,9 @@ const EvaluationNavigation = StackNavigator(
   },
   {
     initialRouteParams: {
-      isReview: false,
+      isReview: true,
     },
   },
 );
 
-export default EvaluationNavigation;
+export default ReviewNavigation;
